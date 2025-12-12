@@ -8,6 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'create_invoice_screen.dart'; // ⬅️ IMPORTANT (Added)
+import 'scan_imei_screen.dart';
+
+
 
 const String baseUrl = "http://127.0.0.1:8000/api";
 
@@ -759,11 +762,19 @@ class _ImeiListScreenState extends State<ImeiListScreen> {
   }
 
   // placeholder for scan; shows snackbar (implement scanner as needed)
-  void _scanToAdd() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Scan feature not implemented in this build.")),
+  void _scanToAdd() async {
+    final scannedValue = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ScanImeiScreen()),
     );
+
+    if (scannedValue != null && scannedValue is String && scannedValue.trim().isNotEmpty) {
+      setState(() {
+        _items.add(scannedValue.trim());
+      });
+    }
   }
+
 }
 
 // ----------------------------------------------------------
